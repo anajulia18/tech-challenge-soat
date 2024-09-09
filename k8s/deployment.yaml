@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: revenda-veiculos-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: revenda-veiculos
+  template:
+    metadata:
+      labels:
+        app: revenda-veiculos
+    spec:
+      containers:
+        - name: revenda-veiculos
+          image: revenda-veiculos:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: revenda-veiculos-config
+                  key: SPRING_PROFILES_ACTIVE
+          # Caso tenha secrets:
+          # - name: DB_PASSWORD
+          #   valueFrom:
+          #     secretKeyRef:
+          #       name: revenda-veiculos-secrets
+          #       key: DB_PASSWORD
